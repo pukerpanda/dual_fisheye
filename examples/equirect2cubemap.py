@@ -1,4 +1,5 @@
-#!/usr/bin/env/python
+#!/usr/bin/python3
+
 import cv2
 import time
 import sys
@@ -33,6 +34,8 @@ print((time.time() - start) / 20)
 print("Input shape", equiRect.shape)
 print("Output shape", cubemap.shape)
 cv2.imshow("cubemap", cubemap)
+cv2.waitKey(0)
+
 cv2.imshow("Equirect", equiRect)
 cv2.waitKey(0)
 # """
