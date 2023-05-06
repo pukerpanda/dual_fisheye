@@ -2,12 +2,10 @@
 
 import os
 import argparse
-import time
 
 import rospy
 
 from sensor_msgs.msg import CompressedImage
-from std_msgs.msg import Header
 
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
@@ -35,13 +33,6 @@ def parse_command_line_arguments():
 
     args = parser.parse_args(rospy.myargv()[1:])                    
     return args
-
-
-def create_header(frame_id):
-    header = Header()
-    header.stamp = rospy.Time.now()
-    header.frame_id = frame_id
-    return header
 
 def main(args):
     '''Creates a bag file with a video file'''
@@ -90,7 +81,7 @@ if __name__ == '__main__':
     node_name = "publish_images"
     rospy.init_node(node_name)
 
-    args = parse_command_line_arguments()
+    args = parse_command_line_arguments()   
     args.input = ROOT + '../data/PIC_20230504_080209.mp4'                            
     try:
         main(args)
