@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/python3
 import cv2
 import sys
 from omnicv import fisheyeImgConv
