@@ -82,7 +82,7 @@ if __name__ == '__main__':
     rospy.init_node(node_name)
 
     args = parse_command_line_arguments()   
-    args.input = ROOT + '../data/PIC_20230504_080209.mp4'                            
+#    args.input = ROOT + '../data/PIC_20230504_080209.mp4'                            
     try:
         main(args)
     except rospy.ROSInterruptException: pass

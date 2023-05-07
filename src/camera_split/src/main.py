@@ -2,7 +2,8 @@
 
 import rospy
 
-from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import CompressedImage, CameraInfo
+from std_msgs.msg import Header
 
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
@@ -11,7 +12,7 @@ import omnicv
 FRAME_ID = "head_camera"  # Name of the camera frame.
 
 TOPIC_IN = '/camera/image_raw/compressed' # replace with transport option '_image_transport:=compressed'
-TOPIC_OUT = 'omnicv/%s/camera/compressed'
+TOPIC_OUT = 'omnicv/%s/camera' 
 FACES = {
     'FRONT': (0,1),
     'RIGHT': (1,2),
@@ -35,10 +36,21 @@ class ImageConverter:
             raise BaseException('ROS parameter error')
 
         self.face_index = FACES[self.camera.upper()]
-        self.image_pub = rospy.Publisher(TOPIC_OUT % self.camera.lower(), CompressedImage, queue_size=10)
+        camera_topic = TOPIC_OUT % self.camera.lower()
+        self.image_pub = rospy.Publisher(camera_topic + '/compressed' , CompressedImage, queue_size=10)
+        self.camera_info_pub = rospy.Publisher(camera_topic, CameraInfo, queue_size=5)
+
         self.image_sub = rospy.Subscriber(TOPIC_IN, CompressedImage, self.callback) 
         self.brige = CvBridge()
         self.mapper = omnicv.fisheyeImgConv()
+
+        self.camera_info = CameraInfo()
+        self.camera_info.distortion_model = "plumb_bob"
+        self.camera_info.R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+        self.camera_info.D = [0.0, 0.0, 0.0, 0.0, 0.0]
+        self.camera_info.height = self.side
+        self.camera_info.width = self.side
+        self.camera_info.header.frame_id = FRAME_ID
 
     def callback(self, data):
         try:
@@ -50,8 +62,12 @@ class ImageConverter:
         cubemap = self.mapper.equirect2cubemap(cv_image, side=self.side, dice=False)
         cv_image_out = cubemap[:, self.face_index[0] * self.side: self.face_index[1] * self.side, :] 
         #cv_image_out = cubemap
-        self.image_pub.publish(self.brige.cv2_to_compressed_imgmsg(cv_image_out))
-
+        imgmsg = self.brige.cv2_to_compressed_imgmsg(cv_image_out)
+        imgmsg.header.stamp = rospy.Time.now()
+        self.image_pub.publish(imgmsg)
+        # add camera info
+        self.camera_info.header.stamp = rospy.Time.now()
+        self.camera_info_pub.publish(self.camera_info)
 
 if __name__ == '__main__':
     node_name = "camera_split"
