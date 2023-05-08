@@ -132,3 +132,7 @@ dmypy.json
 data
 devel
 CATKIN_IGNORE
+
+# emacs
+\#*
+\.\#*

@@ -219,8 +219,9 @@ class fisheyeImgConv:
         dstFrame = cv2.remap(srcFrame,
                              self.map_x,
                              self.map_y,
-                             interpolation=cv2.INTER_LINEAR,
-                             borderMode=cv2.BORDER_CONSTANT)
+                             interpolation=cv2.INTER_CUBIC, #cv2.INTER_LINEAR,
+                             borderMode=cv2.BORDER_WRAP, #cv2.BORDER_CONSTANT
+                             )
 
         if self.dice:
             line1 = np.hstack(

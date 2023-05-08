@@ -10,6 +10,7 @@ from cv_bridge import CvBridge, CvBridgeError
 import cv2
 
 import omnicv
+from py360convert import e2c
 
 ROOT = os.path.dirname(os.path.abspath(__file__))+'/'
 
@@ -36,7 +37,7 @@ def parse_command_line_arguments():
     parser.add_argument("-n", "--num-frames-target", required=False, type=float,
                         default=100,
                         help="How many images to use.")
-    parser.add_argument("-s", "--side", required=False, type=float,
+    parser.add_argument("-s", "--side", required=False, type=int,
                         default=1024,
                         help="Cube side.")
 
@@ -56,7 +57,7 @@ def main(args):
     prop_fps = cap.get(cv2.CAP_PROP_FPS)
     prop_num_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
     stride = math.ceil(prop_num_frames / args.num_frames_target)
-
+    print(f"Video frames {prop_num_frames} stride: {stride}")
     mapper = omnicv.fisheyeImgConv()
     
     frame_id = 0
@@ -72,13 +73,14 @@ def main(args):
         if (frame_id + 1) % stride:
             continue
         
-        cubemap = mapper.equirect2cubemap(frame, side=args.side, dice=False)
+        #cubemap = mapper.equirect2cubemap(frame, side=args.side, dice=False)
+        cubemap = e2c(frame, face_w=args.side, cube_format='horizon') 
 
         for dir in ['FRONT', 'RIGHT', 'BACK', 'LEFT']:
             face_index = FACES[dir]
             side_image = cubemap[:, face_index[0] * args.side: face_index[1] * args.side, :] 
             cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.jpeg', side_image)
-            
+
             image_seq += 1
 
 
