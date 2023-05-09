@@ -4,7 +4,7 @@ import math
 import os
 import sys
 import argparse
-
+import numpy as np
 
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
@@ -56,33 +56,57 @@ def main(args):
     cb = CvBridge()
     prop_fps = cap.get(cv2.CAP_PROP_FPS)
     prop_num_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    stride = math.ceil(prop_num_frames / args.num_frames_target)
-    print(f"Video frames {prop_num_frames} stride: {stride}")
+    
+    if prop_num_frames / 2 <  args.num_frames_target:
+        print("Warning: insuficient frames for double time stride")
+
+    stride = math.floor(prop_num_frames / args.num_frames_target)    # double time 
+    print(f"Video frames {prop_num_frames}, stride: {stride}, target frames: {args.num_frames_target}")
     mapper = omnicv.fisheyeImgConv()
     
     frame_id = 0
     image_seq = 0
     while True:
-        ret, frame = cap.read()
-        if not ret:
+
+        ret1, frame1 = cap.read()
+        ret2, frame2 = cap.read()
+        if not (ret1 and ret2):
             print("EOS")
             break
 
         frame_id += 1
-
-        if (frame_id + 1) % stride:
+        if (frame_id) % stride:
             continue
+        print('>> frame/seq', frame_id, image_seq)
         
-        #cubemap = mapper.equirect2cubemap(frame, side=args.side, dice=False)
-        cubemap = e2c(frame, face_w=args.side, cube_format='horizon') 
+        #cubemap1 = mapper.equirect2cubemap(frame1, side=args.side, dice=False)
+        cubemap1 = e2c(frame1, face_w=args.side, cube_format='horizon') 
+        frame2 = np.roll(frame1, int(args.side / 2), axis=1)
+        cubemap2 = e2c(frame2, face_w=args.side, cube_format='horizon') 
 
-        for dir in ['FRONT', 'RIGHT', 'BACK', 'LEFT']:
+        # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}1.jpg', cubemap1)
+        # image_seq += 1
+        # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}2.jpg', cubemap2)
+        # image_seq += 1
+        # continue
+
+        for dir in ['FRONT', 'LEFT', 'BACK', 'RIGHT']:
             face_index = FACES[dir]
-            side_image = cubemap[:, face_index[0] * args.side: face_index[1] * args.side, :] 
-            cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.jpeg', side_image)
-
+            
+            # frame 1
+            side_image1 = cubemap1[:, face_index[0] * args.side: face_index[1] * args.side, :] 
+            if dir in ['RIGHT', 'BACK']:
+                side_image1 = np.flip(side_image1, axis=1)
+            # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.1_{dir}.jpg', side_image1)
+            cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.jpg', side_image1)
             image_seq += 1
 
+            # frame 2 
+            side_image2 = cubemap2[:, face_index[0] * args.side: face_index[1] * args.side, :] 
+            if dir in ['RIGHT', 'BACK']:
+                side_image2 = np.flip(side_image2, axis=1)
+            cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.jpg', side_image2)
+            image_seq += 1
 
 if __name__ == '__main__':
     node_name = "video_spliter"
