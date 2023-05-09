@@ -79,25 +79,17 @@ def main(args):
             continue
         print('>> frame/seq', frame_id, image_seq)
         
-        #cubemap1 = mapper.equirect2cubemap(frame1, side=args.side, dice=False)
         cubemap1 = e2c(frame1, face_w=args.side, cube_format='horizon') 
         frame2 = np.roll(frame1, int(args.side / 2), axis=1)
         cubemap2 = e2c(frame2, face_w=args.side, cube_format='horizon') 
 
-        # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}1.jpg', cubemap1)
-        # image_seq += 1
-        # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}2.jpg', cubemap2)
-        # image_seq += 1
-        # continue
-
         for dir in ['FRONT', 'LEFT', 'BACK', 'RIGHT']:
             face_index = FACES[dir]
-            
+
             # frame 1
             side_image1 = cubemap1[:, face_index[0] * args.side: face_index[1] * args.side, :] 
             if dir in ['RIGHT', 'BACK']:
                 side_image1 = np.flip(side_image1, axis=1)
-            # cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.1_{dir}.jpg', side_image1)
             cv2.imwrite(f'{directory}/frame_{"%04d"%image_seq}.jpg', side_image1)
             image_seq += 1
 
