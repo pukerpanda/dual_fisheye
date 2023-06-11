@@ -41,4 +41,8 @@ ffmpeg -i renders/fantana2/2023-05-09_104053.mp4 -vf "fps=25,scale=640:-1:flags=
 ```
 
 
+Examples:
+
 ![fantana](images/fantana.gif "Fantana")
+
+![fantana](images/bomsai.gif "Bonsai")
