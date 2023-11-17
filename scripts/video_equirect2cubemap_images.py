@@ -84,9 +84,9 @@ def main(args):
             continue
         print('>> frame/seq', frame_id, image_seq)
 
-        shift = frame1.shape[1] // (360 // roll_deg)
+        shift = (frame1.shape[1] // 360) * roll_deg
         cubemap1 = e2c(frame1, face_w=args.side, cube_format='horizon')
-        frame2 = np.roll(frame1, shift, axis=1) #FIXME: roll 30 degree
+        frame2 = np.roll(frame1, shift, axis=1)
         cubemap2 = e2c(frame2, face_w=args.side, cube_format='horizon')
         # cv2.imwrite(f'{directory}/equirect_1_{"%04d"%frame_id}.jpg', frame1)
         # cv2.imwrite(f'{directory}/equirect_2_{"%04d"%frame_id}.jpg', frame2)
