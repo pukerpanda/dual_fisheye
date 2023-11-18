@@ -1,6 +1,6 @@
 
 
-# Double fisheye image to panorama
+# Double fisheye image to panorama (Samsung Gear360/2017)
 
 1. Install Hugin
    : sudo add-apt-repository ppa:ubuntuhandbook1/apps
