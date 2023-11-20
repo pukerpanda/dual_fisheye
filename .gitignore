@@ -136,3 +136,8 @@ CATKIN_IGNORE
 # emacs
 \#*
 \.\#*
+
+
+outputs/
+renders/
+

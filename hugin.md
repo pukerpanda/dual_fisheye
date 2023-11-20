@@ -15,3 +15,9 @@
 
 4. Add EXIF tag
    : exiftool -XMP-GSpherical:Spherical="true" file.mp4
+
+
+./gear360video.sh -p test.mp4             
+ffprobe -v error -of flat=s=_ -select_streams v:0 -show_entries stream=height,width  data/test.mp4
+./scripts/video_equirect2cubemap_images.py -i data/test_pano.mp4 -o data/faro/images -n 10 -s 2048
+
