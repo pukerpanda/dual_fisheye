@@ -21,3 +21,7 @@
 ffprobe -v error -of flat=s=_ -select_streams v:0 -show_entries stream=height,width  data/test.mp4
 ./scripts/video_equirect2cubemap_images.py -i data/test_pano.mp4 -o data/faro/images -n 10 -s 2048
 
+
+5. Use spatial audio in 360-degree and VR videos
+   https://support.google.com/youtube/answer/6395969
+   https://github.com/google/spatial-media/releases/tag/v2.1
