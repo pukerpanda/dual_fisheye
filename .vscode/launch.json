@@ -10,11 +10,20 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true,
+            "justMyCode": true
+        },
+        {
+            "name": "equirect2cubemap",
+            "type": "python",
+            "request": "launch",
+            "program": "./scripts/video_equirect2cubemap_images.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
             "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/src"
-            }
+            },
+            "args": ["-i", "data/test.mp4", "-o", "data/faro/images", "-n", "100", "-s", "820"]
         }
     ]
 }
