@@ -14,4 +14,7 @@
    : ls -1 ~/Videos/gear360_nazare/100PHOTO/*MP4 | parallel --load 99% --noswap --memfree 500M --bar ./gear360video.sh -p {}
 
 4. Add EXIF tag
+   - VLC
    : exiftool -XMP-GSpherical:Spherical="true" file.mp4
+   - Yourtube
+   https://github.com/google/spatial-media/tree/master
