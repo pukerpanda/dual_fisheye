@@ -39,7 +39,7 @@ PARALLELEXTRAOPTS="--load 99% --noswap --memfree 500M"
 # Debug, yes = print debug messages
 DEBUG="yes"
 # Global flag if temporary directories should be removed
-CLEANUP="yes"
+CLEANUP="no"
 
 
 #############

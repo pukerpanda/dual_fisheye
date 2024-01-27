@@ -3,7 +3,7 @@
 # Double fisheye image to panorama (Samsung Gear360/2017)
 
 1. Install Hugin
- ```  
+ ```
  sudo add-apt-repository ppa:ubuntuhandbook1/apps
  sudo apt install hugin
  ```
@@ -33,7 +33,26 @@
 
 
 5. Use spatial audio in 360-degree and VR videos
-   
+
    [https://support.google.com/youtube/answer/6395969]
-   
+
    [https://github.com/google/spatial-media/releases/tag/v2.1]
+
+
+6. Examples:
+
+
+  video: ./scripts/video_probe.sh data/lamp_post.MP4
+  ```
+frames: 585
+duration: 24.375000
+resolution: 4096x2048
+  ```
+
+  timelaps: ./scripts/video_probe.sh data/timelaps.MP4
+```
+frames: 21
+duration: 2.100000
+resolution: 2560x1280
+```
+
