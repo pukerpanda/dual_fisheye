@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 
 import argparse
 import xml.etree.ElementTree as ET
@@ -76,7 +77,7 @@ def get_calibration(root):
 		for child in sensor:
 			if child.tag == "calibration":
 				return child
-	print("No calibration found")	
+	print("No calibration found")
 	return None
 
 def reflectZ():
@@ -142,18 +143,18 @@ if __name__ == "__main__":
 				continue
 			if(frame[0].tag != "transform"):
 				continue
-			
+
 			imagePath = IMGFOLDER+frame.get("label")+"." + IMGTYPE
 			current_frame.update({"file_path": imagePath})
 			current_frame.update({"sharpness":sharpness(imagePath)})
 			matrix_elements = [float(i) for i in frame[0].text.split()]
 			transform_matrix = np.array([[matrix_elements[0], matrix_elements[1], matrix_elements[2], matrix_elements[3]], [matrix_elements[4], matrix_elements[5], matrix_elements[6], matrix_elements[7]], [matrix_elements[8], matrix_elements[9], matrix_elements[10], matrix_elements[11]], [matrix_elements[12], matrix_elements[13], matrix_elements[14], matrix_elements[15]]])
-			
+
 			#swap axes
 			transform_matrix = transform_matrix[[2,0,1,3],:]
 			#reflect z and Y axes
 			current_frame.update({"transform_matrix":matrixMultiply(matrixMultiply(transform_matrix, reflectZ()), reflectY())} )
-			
+
 			frames.append(current_frame)
 		out.update({"frames": frames})
 

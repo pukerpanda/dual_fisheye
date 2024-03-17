@@ -26,7 +26,7 @@ IGNOREPROCESSED="yes"
 # Default blending program
 BLENDPROG="enblend"
 # Default - we use GPU
-EXTRANONAOPTIONS="-g"
+EXTRANONAOPTIONS=""
 EXTRAENBLENDOPTIONS="--gpu"
 # Debug, yes - print debug, empty - no debug
 DEBUG="yes"
